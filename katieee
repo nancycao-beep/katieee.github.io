@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Three Bodies, One Girl</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f0ea;--ink:#232120;--mut:#6e5d54;--acc:#5e2c30;--ln:rgba(35,33,32,.18);--card:rgba(255,252,248,.72);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1716;--ink:#ece4dc;--mut:#a89488;--acc:#d7a9a6;--ln:rgba(236,228,220,.2);--card:rgba(44,37,36,.72)}}
+:root[data-theme="dark"]{--bg:#1a1716;--ink:#ece4dc;--mut:#a89488;--acc:#d7a9a6;--ln:rgba(236,228,220,.2);--card:rgba(44,37,36,.72)}
+body[data-ch="3"],body[data-ch="4"]{--bg:#18161d;--ink:#e9e2e8;--mut:#9d92a0;--acc:#d3b0cf;--ln:rgba(233,226,232,.2);--card:rgba(40,36,48,.72)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;display:flex;flex-direction:column;overflow:hidden;transition:background 2.5s,color 2.5s}
+button{font:inherit;color:inherit;background:none;cursor:pointer}
+button[hidden]{display:none}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font:300 12px/1 Inter,Helvetica,sans-serif;letter-spacing:.08em;color:var(--mut);position:relative;z-index:2}
+#prog{display:flex;gap:9px;align-items:center}
+#prog i{width:6px;height:6px;border-radius:50%;border:1px solid var(--mut);opacity:.55}
+#prog i.d{background:var(--mut)}
+#prog i.on{background:var(--ink);border-color:var(--ink);opacity:1}
+#prog b{font-weight:300;margin-left:6px}
+#mute{border:0;font:inherit;letter-spacing:inherit;color:inherit;opacity:.75}
+main{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;z-index:1}
+#stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px}
+#stage svg{max-width:100%;max-height:100%}
+#text{width:100%;max-width:40rem;margin:0 auto;padding:10px 24px 20px;min-height:34%;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px}
+#line{font-size:clamp(1.3rem,3.9vw,1.9rem);line-height:1.38;min-height:3.8em;display:flex;align-items:center;justify-content:center}
+#line.long{font-size:clamp(1.08rem,2.9vw,1.45rem)}
+#line.in{animation:rise 1.6s ease both}
+#line .epi{font-size:.8em;color:var(--mut);font-style:italic}
+@keyframes rise{from{opacity:0;filter:blur(3px);transform:translateY(6px)}to{opacity:1;filter:none;transform:none}}
+#thought{font-style:italic;color:var(--acc);font-size:clamp(1.1rem,3.1vw,1.4rem);line-height:1.3;min-height:2.7em;animation:rise 1s both}
+#thought .h{font:300 12px Inter,Helvetica,sans-serif;font-style:normal;letter-spacing:.08em;color:var(--mut)}
+#go{border:1px solid var(--ln);border-radius:99px;padding:10px 20px;font:400 12px Inter,Helvetica,sans-serif;letter-spacing:.14em;opacity:.85}
+#go:hover,#go:focus-visible{opacity:1;border-color:var(--ink)}
+.tint{position:fixed;inset:0;pointer-events:none;z-index:0;transition:background 2.5s}
+body[data-ch="1"] .tint{background:rgba(224,176,118,.16)}
+body[data-ch="2"] .tint{background:rgba(224,176,118,.13)}
+.tint::after{content:"";position:absolute;inset:0;background:rgba(112,128,168,.3);opacity:var(--cool,0);transition:opacity 2.5s}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+#fade{position:fixed;inset:0;z-index:30;background:#0d0c0e;color:#d9cfc8;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 1.2s;font-size:clamp(1.9rem,6vw,3.2rem);font-style:italic;line-height:1.15}
+#fade.on{opacity:1;pointer-events:auto}
+#fade span{display:block;font:300 13px Inter,Helvetica,sans-serif;font-style:normal;letter-spacing:.14em;margin-bottom:.9em;opacity:.7}
+/* intro collage */
+.collage{position:relative;width:100%;max-width:640px;height:100%}
+.c{position:absolute;width:30%;max-width:170px;padding:6px;background:var(--card);border:1px solid var(--ln);box-shadow:0 12px 26px rgba(0,0,0,.12);font:300 11px/1.3 Inter,Helvetica,sans-serif;color:var(--mut);animation:rise 2.4s both}
+.c span{display:block;margin-top:5px}
+.c1{left:3%;top:4%;transform:rotate(-4deg);animation-delay:.4s}.c2{left:37%;top:2%;transform:rotate(3deg);animation-delay:.9s}.c3{left:68%;top:6%;transform:rotate(-2deg);animation-delay:1.4s}
+.c4{left:5%;top:46%;transform:rotate(3deg);animation-delay:1.9s}.c5{left:36%;top:42%;transform:rotate(-3deg);animation-delay:2.4s}.c6{left:67%;top:48%;transform:rotate(4deg);animation-delay:2.9s}.c7{left:22%;top:74%;transform:rotate(-2deg);animation-delay:3.4s}
+.ph{aspect-ratio:4/3;filter:grayscale(.35)}
+.p1{background:radial-gradient(circle at 28% 42%,#e3c9c2 0 11%,transparent 12%),radial-gradient(circle at 52% 38%,#d9bfb6 0 11%,transparent 12%),radial-gradient(circle at 76% 44%,#cdb3ac 0 11%,transparent 12%),linear-gradient(160deg,#8a766e,#4a3c38)}
+.p2{background:linear-gradient(120deg,#9a8a7f 0 30%,#6e5d54 30% 55%,#b9a79f 55%)}
+.tk{border-style:dashed}.tk b{display:block;font-weight:400;letter-spacing:.12em;color:var(--ink)}
+.note{font:italic 400 16px/1.2 'Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.rail{display:flex;gap:4px;align-items:flex-end;height:46px;border-top:2px solid var(--mut)}
+.rail i{flex:1;height:36px;border-radius:2px 2px 9px 9px;background:#3a3436}.rail i:nth-child(2){background:#5e2c30}.rail i:nth-child(3){background:#8c8881}.rail i:nth-child(4){background:#c89f9c}
+/* hotspots */
+.hs{cursor:pointer;outline:none}
+.hl{fill:transparent;stroke:var(--acc);stroke-width:1;stroke-dasharray:3 3;stroke-opacity:0;transition:stroke-opacity .4s}
+.hs:hover .hl,.hs:focus-visible .hl{stroke-opacity:.9}
+.pulse .hl{animation:pl 2.6s ease-in-out infinite}
+@keyframes pl{50%{stroke-opacity:.8}}
+.lt{animation:lt 9s ease-in-out infinite alternate}
+@keyframes lt{to{opacity:.55;transform:translateX(14px)}}
+#fk{transition:transform 2s;transform-box:fill-box}
+/* mirror */
+.mir{display:flex;gap:16px;align-items:center;height:100%;max-height:100%}
+.mw{position:relative;height:100%;max-height:100%}
+.mw svg{height:100%;width:auto;transition:transform 2.5s,filter 2.5s;transform:skewX(calc(var(--cool,0)*-3deg));filter:saturate(calc(1 - var(--cool,0)*.6)) brightness(calc(1 - var(--cool,0)*.2))}
+.crack{position:absolute;inset:0;border-radius:95px;pointer-events:none;opacity:calc(var(--cool,0)*.9);background:repeating-linear-gradient(115deg,transparent 0 34px,rgba(255,255,255,.18) 35px,transparent 37px)}
+.dr,.bg{transition:opacity 2s}
+.baggy .dr{opacity:0}.baggy .bg{opacity:1}
+.out{display:flex;flex-direction:column;gap:12px;text-align:center;font:300 11px Inter,Helvetica,sans-serif;color:var(--mut);opacity:0;transition:opacity 2.5s}
+.out.on{opacity:1}.out svg{display:block;margin:0 auto 4px}
+/* phone */
+.room{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:18px}
+.room::before{content:"";position:absolute;inset:-20px;background:radial-gradient(circle at 50% 45%,transparent 25%,rgba(0,0,0,calc(.25 + var(--e,0)*.6)) 85%);pointer-events:none;z-index:3}
+.phone{position:relative;height:100%;max-height:100%;aspect-ratio:3/4;max-width:60%;border:6px solid #0a090c;border-radius:22px;overflow:hidden;background:#000;z-index:4;box-shadow:0 0 calc(30px + var(--e,0)*70px) rgba(214,170,224,calc(.15 + var(--e,0)*.4))}
+.phone svg{width:100%;height:100%;display:block;transition:filter .5s,transform .5s}
+.phone::after{content:"";position:absolute;inset:0;background:#000;opacity:0;transition:opacity 3s;z-index:6;pointer-events:none}
+.phone.off::after{opacity:.75}
+.phone.orig::before,.phone.ed::before{position:absolute;top:8px;left:8px;z-index:5;font:300 10px Inter,Helvetica,sans-serif;letter-spacing:.1em;color:#fff;background:rgba(0,0,0,.5);padding:3px 8px;border-radius:9px}
+.phone.ed::before{content:"edited"}.phone.orig::before{content:"original"}
+.feed{position:absolute;left:0;right:0;bottom:0;padding:8px;display:flex;flex-direction:column;gap:5px;background:linear-gradient(transparent,rgba(0,0,0,.7));font:300 11px Inter,Helvetica,sans-serif;color:#f1e9f0;z-index:5}
+.feed p{background:rgba(255,255,255,.14);padding:4px 9px;border-radius:10px;animation:rise .8s both}
+.ctl{display:flex;flex-direction:column;gap:9px;width:36%;max-width:170px;font:300 11px Inter,Helvetica,sans-serif;color:var(--mut);z-index:4;transition:opacity 1.2s}
+.ctl.hide{opacity:0;pointer-events:none}
+.ctl input{width:100%;accent-color:var(--acc)}
+.fl{display:flex;flex-wrap:wrap;gap:5px}
+.ctl button{border:1px solid var(--ln);border-radius:99px;padding:5px 10px;font:300 11px Inter,Helvetica,sans-serif;color:var(--ink)}
+.ctl button.on,.ctl #po{background:var(--ink);color:var(--bg)}
+/* epilogue */
+.ep{position:relative;width:100%;height:100%}
+.mem{position:absolute;opacity:0;transition:opacity 3.5s;filter:blur(1px)}
+.mem.on{opacity:.55}
+.m1{left:5%;top:8%}.m2{right:6%;top:4%}.m3{right:24%;bottom:8%}
+.mp{width:60px;height:96px;border-radius:12px;background:linear-gradient(#d9a8c9,#8f7ab0);box-shadow:0 0 60px rgba(214,170,224,.6)}
+.tri{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.tri svg{position:absolute;height:62%;opacity:0;transition:transform 6s,opacity 4s,fill 5s}
+.tri .a{fill:#c9a58a}.tri .b{fill:#8f8a98}.tri .c{fill:#c89fc3}
+.tri.on svg{opacity:.5}
+.tri.on .a{transform:translateX(-56px)}.tri.on .c{transform:translateX(56px)}
+.tri.one svg{transform:none!important;opacity:.35;fill:#9a8f98}
+/* ending */
+#end{position:fixed;inset:0;z-index:20;background:#0b0a0d;color:#d9cfc8;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 3s}
+#end.on{opacity:1;pointer-events:auto}
+#endc{max-width:34rem;max-height:100%;overflow:auto;opacity:0;transition:opacity 2.5s;text-align:center}
+.diary{text-align:left;font-style:italic;font-size:clamp(1.05rem,3.2vw,1.35rem);line-height:1.5;padding:24px;background:rgba(236,226,208,.06);border:1px solid rgba(236,226,208,.15);transform:rotate(-.5deg)}
+.diary p+p{margin-top:1em}
+#endc button{margin-top:22px;border:1px solid rgba(236,226,208,.3);border-radius:99px;padding:9px 18px;font:300 12px Inter,Helvetica,sans-serif;letter-spacing:.12em;color:inherit}
+.thx p{font-size:clamp(1.3rem,4.4vw,2rem);font-style:italic;line-height:1.4;margin-bottom:1em;opacity:0;animation:rise 3s both}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01s!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body data-ch="0">
+<div class="tint"></div>
+<header><nav id="prog" aria-label="Story progress"></nav><button id="mute">sound on</button></header>
+<main>
+<section id="stage" aria-live="polite"></section>
+<section id="text"><p id="line"></p><p id="thought"></p><button id="go">continue</button></section>
+</main>
+<div class="grain"></div>
+<div id="fade" class="on"></div>
+<div id="end"><div id="endc"></div></div>
+<script>
+const $=s=>document.querySelector(s),st=$('#stage'),ln=$('#line'),th=$('#thought'),go=$('#go'),fade=$('#fade');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+let si=0,li=0,cur=null,tm=[],chap=0,ac,mg,nb,muted=false;
+const ed={b:100,s:0,f:'none',c:0,n:0};
+const say=t=>{th.innerHTML=t;th.style.animation='none';void th.offsetWidth;th.style.animation=''};
+const hint=t=>say('<span class="h">'+t+'</span>');
+
+/* ambient cafeteria sound */
+function audio(){if(ac){ac.resume();return}try{ac=new(window.AudioContext||window.webkitAudioContext)();nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=nb.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*4}const s=ac.createBufferSource();s.buffer=nb;s.loop=true;const f=ac.createBiquadFilter();f.type='bandpass';f.frequency.value=650;f.Q.value=.5;mg=ac.createGain();mg.gain.value=0;s.connect(f).connect(mg).connect(ac.destination);s.start();vol();setInterval(clat,3200)}catch(e){}}
+function vol(){if(mg)mg.gain.setTargetAtTime(!muted&&chap===1?.35:0,ac.currentTime,.8)}
+function clat(){if(!ac||muted||chap!==1||Math.random()<.4)return;const s=ac.createBufferSource(),g=ac.createGain(),f=ac.createBiquadFilter();s.buffer=nb;f.type='highpass';f.frequency.value=2500;g.gain.setValueAtTime(.12,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.18);s.connect(f).connect(g).connect(ac.destination);s.start(0,Math.random())}
+$('#mute').onclick=e=>{muted=!muted;e.target.textContent=muted?'sound off':'sound on';vol()};
+
+/* stages */
+const intro=()=>`<div class="collage"><div class="c c1"><div class="ph p1"></div><span>us, somewhere after midnight</span></div><div class="c c2 tk"><b>ADMIT ONE</b><span>Saturday, doors at 8</span></div><div class="c c3"><div class="rail"><i></i><i></i><i></i><i></i><i></i></div><span>my wardrobe, mostly black</span></div><div class="c c4 note">third coffee. don’t tell anyone.</div><div class="c c5"><div class="ph p2"></div><span>messy room, my mess</span></div><div class="c c6 note">“you coming tonight?” — M</div><div class="c c7 tk"><b>my playlist</b><span>47 songs, on repeat</span></div></div>`;
+const ch1=()=>`<svg viewBox="0 0 400 240" role="img" aria-label="A cafeteria table at lunchtime"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#f6dfb4" stop-opacity=".7"/><stop offset="1" stop-color="#f6dfb4" stop-opacity="0"/></linearGradient><filter id="bl"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<g class="lt"><polygon points="20,0 110,0 230,150 90,150" fill="url(#lg)"/><polygon points="130,0 200,0 330,150 220,150" fill="url(#lg)"/></g>
+<g filter="url(#bl)" opacity=".5" fill="#8a766e"><circle cx="60" cy="70" r="18"/><circle cx="130" cy="60" r="16"/><circle cx="260" cy="66" r="17"/><circle cx="340" cy="72" r="18"/><rect x="40" y="90" width="40" height="50" rx="14"/><rect x="240" y="88" width="42" height="52" rx="14"/><rect x="320" y="92" width="40" height="48" rx="14"/></g>
+<rect y="150" width="400" height="90" fill="#cdbfae"/><rect y="150" width="400" height="4" fill="#a99a88"/>
+<g class="hs" data-k="tray" tabindex="0" role="button" aria-label="Tray"><rect x="70" y="158" width="260" height="68" rx="8" fill="#9c9186"/><circle cx="150" cy="192" r="26" fill="#e9e1d4"/><circle cx="143" cy="188" r="9" fill="#c3a28f"/><circle cx="158" cy="198" r="8" fill="#9cae8c"/><rect x="190" y="176" width="46" height="30" rx="4" fill="#d8cbb4"/><rect class="hl" x="66" y="154" width="268" height="76" rx="10"/></g>
+<g class="hs" data-k="fork" tabindex="0" role="button" aria-label="Fork"><g id="fk" stroke="#cfcac4" stroke-width="2.4" fill="none"><path d="M243 150v18M247.5 150v18M252 150v18M243 168h9M247.5 168v40"/></g><rect class="hl" x="236" y="146" width="24" height="68" rx="4"/></g>
+<g class="hs" data-k="cup" tabindex="0" role="button" aria-label="Cup of water"><path d="M296 170h26l-3 38h-20z" fill="#dfe6e8" opacity=".75"/><rect class="hl" x="290" y="164" width="38" height="48" rx="4"/></g>
+<ellipse id="hand" cx="232" cy="160" rx="22" ry="11" fill="#d9b8a4" opacity="0" style="transition:opacity 2s"/></svg>`;
+const ch2=()=>`<div class="mir"><div class="mw"><svg viewBox="0 0 300 380" id="mv" role="img" aria-label="A mirror"><defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7d8cc"/><stop offset="1" stop-color="#b9a79f"/></linearGradient></defs>
+<rect x="55" y="8" width="190" height="364" rx="95" fill="#5b4a44"/><rect x="63" y="16" width="174" height="348" rx="87" fill="url(#mg)"/>
+<g fill="#8b7a74"><circle cx="150" cy="86" r="27"/><rect x="141" y="108" width="18" height="16"/><rect x="86" y="132" width="20" height="92" rx="10"/><rect x="194" y="132" width="20" height="92" rx="10"/><rect x="124" y="292" width="20" height="62" rx="9"/><rect x="156" y="292" width="20" height="62" rx="9"/></g>
+<path class="dr" d="M112 128 L188 128 L196 170 L180 188 L212 292 L88 292 L120 188 L104 170Z" fill="#5e2c30"/>
+<path class="bg" d="M100 128 L200 128 L210 236 L200 330 L100 330 L90 236Z" fill="#777073" opacity="0"/>
+<g class="hs" data-k="forehead" tabindex="0" role="button" aria-label="Forehead"><ellipse class="hl" cx="150" cy="68" rx="28" ry="13"/></g>
+<g class="hs" data-k="arms" tabindex="0" role="button" aria-label="Arms"><rect class="hl" x="78" y="128" width="34" height="104" rx="12"/><rect class="hl" x="188" y="128" width="34" height="104" rx="12"/></g>
+<g class="hs" data-k="waist" tabindex="0" role="button" aria-label="Waist"><ellipse class="hl" cx="150" cy="182" rx="42" ry="15"/></g>
+<g class="hs" data-k="legs" tabindex="0" role="button" aria-label="Legs"><rect class="hl" x="116" y="294" width="68" height="64" rx="10"/></g></svg><div class="crack"></div></div>
+<div class="out" id="out"><div><svg viewBox="0 0 70 90" width="58"><path d="M20 4h30l6 24-8 6 10 52H12l10-52-8-6z" fill="#5e2c30"/></svg>the dress<br>I wanted</div><div><svg viewBox="0 0 70 90" width="58"><path d="M14 6h42l8 24-10 6v54H16V36L6 30z" fill="#6f6a6c"/></svg>what I<br>wore</div></div></div>`;
+const PH=`<svg id="img" viewBox="0 0 120 160" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A photo of three friends at a concert"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2f45"/><stop offset="1" stop-color="#7d6270"/></linearGradient></defs><rect width="120" height="160" fill="url(#pg)"/><circle cx="20" cy="22" r="14" fill="#c9a0b3" opacity=".35"/><circle cx="100" cy="30" r="18" fill="#9b8ac0" opacity=".3"/><g fill="#b59a96"><circle cx="30" cy="70" r="12"/><path d="M8 160c0-40 8-62 22-62s22 22 22 62z"/></g><g fill="#a38a8a"><circle cx="88" cy="68" r="12"/><path d="M66 160c0-40 8-64 22-64s22 24 22 64z"/></g><g fill="#8c7378"><circle cx="60" cy="60" r="12.5"/><path d="M36 160c0-46 9-70 24-70s24 24 24 70z"/></g></svg>`;
+const ch3=()=>`<div class="room"><div class="phone" id="ph">${PH}<div class="feed" id="feed"></div></div><div class="ctl hide" id="ctl"><label>light<input type="range" id="rb" min="90" max="140" value="${ed.b}"></label><label>soft<input type="range" id="rs" min="0" max="3" step=".25" value="${ed.s}"></label><div class="fl" id="fl">${[['none','none'],['rose','rose'],['lav','lilac'],['vint','faded']].map(f=>`<button data-f="${f[0]}" class="${ed.f==f[0]?'on':''}">${f[1]}</button>`).join('')}</div><div class="fl"><button id="cr" class="${ed.c?'on':''}">crop</button><button id="cm">hold: original</button></div><div class="fl"><button id="ke">keep editing</button><button id="po">post</button></div></div></div>`;
+const FX={none:'',rose:'sepia(.25) hue-rotate(-20deg) saturate(1.2)',lav:'hue-rotate(35deg) saturate(1.1) brightness(1.04)',vint:'sepia(.55) contrast(.92)'};
+function applyEd(orig){const i=$('#img');if(!i)return;i.style.filter=orig?'none':`brightness(${ed.b}%) blur(${ed.s}px) ${FX[ed.f]}`;i.style.transform=!orig&&ed.c?'scale(1.28)':'scale(1)';const p=$('#ph');p.classList.toggle('orig',!!orig);p.classList.toggle('ed',!orig&&ed.n>0);st.style.setProperty('--e',Math.max(.3,Math.min(1,ed.n/12)))}
+function ch3i(){applyEd();const bump=()=>{ed.n++;applyEd()};
+$('#rb').oninput=e=>{ed.b=+e.target.value;bump()};$('#rs').oninput=e=>{ed.s=+e.target.value;bump()};
+$('#fl').onclick=e=>{const f=e.target.dataset.f;if(!f)return;ed.f=f;[...$('#fl').children].forEach(b=>b.classList.toggle('on',b.dataset.f==f));bump()};
+$('#cr').onclick=e=>{ed.c=ed.c?0:1;e.target.classList.toggle('on',!!ed.c);bump()};
+const cm=$('#cm');cm.onpointerdown=()=>applyEd(1);['pointerup','pointerleave','pointercancel'].forEach(t=>cm.addEventListener(t,()=>applyEd()));
+let k=0;const KT=['I keep making small changes. Nothing too obvious. Just enough to make the picture look better.','A little brighter. Just a little. Nobody will notice.','Almost. It’s almost me, but better.'];
+$('#ke').onclick=()=>{ed.n++;applyEd();say(KT[k++%KT.length])};
+$('#po').onclick=()=>load(si+1)}
+const TRAY=`<svg viewBox="0 0 120 70" width="110"><rect x="5" y="15" width="110" height="45" rx="5" fill="#9c9186"/><circle cx="40" cy="38" r="16" fill="#e9e1d4"/><circle cx="36" cy="36" r="6" fill="#c3a28f"/><circle cx="48" cy="42" r="5" fill="#9cae8c"/><rect x="82" y="22" width="3" height="30" fill="#ddd"/></svg>`;
+const DRESS=`<svg viewBox="0 0 100 130" width="90"><ellipse cx="68" cy="62" rx="26" ry="54" fill="none" stroke="#cfc6c0" stroke-width="2"/><path d="M26 10L18 28l18 8-12 84h48L60 36l18-8-8-18Q48 20 26 10z" fill="#5e2c30"/></svg>`;
+const SIL='<circle cx="60" cy="38" r="20"/><path d="M22 152C22 96 38 72 60 72s38 24 38 80z"/>';
+const ep=()=>`<div class="ep"><div class="mem m1" id="m1">${TRAY}</div><div class="mem m2" id="m2">${DRESS}</div><div class="mem m3" id="m3"><div class="mp"></div></div><div class="tri" id="tri"><svg class="a" viewBox="0 0 120 160">${SIL}</svg><svg class="b" viewBox="0 0 120 160">${SIL}</svg><svg class="c" viewBox="0 0 120 160">${SIL}</svg></div></div>`;
+
+/* thoughts */
+const T1={fork:'Damn I really should eat. I’m not being nice to my body right now.',tray:'Maybe I can eat a lot during dinner to make up for this lunch?',cup:'I can just trick my body that I’m full by drinking water.'};
+const T2={forehead:'Ew my forehead is too wide. I think I’m going bald.',arms:'Why are my arms so big????? This dress just reveals everything I hate about myself.',waist:'How can a human have such a big waist?????',legs:'Maybe it’s not a good idea to wear a dress when you haven’t shaved.'};
+let cool=0;const setCool=v=>{cool=v;document.body.style.setProperty('--cool',v)};
+const memOn=(id,v=1)=>$('#'+id).classList.toggle('on',!!v);
+const COM=[['maya','You’re so pretty!'],['jules','Love this picture.'],['nora','Katie, you look amazing.'],['theo','wait where did you get that outfit??']];
+
+/* scenes */
+const SC=[
+{ch:0,title:'Three Bodies,<br>One Girl',stage:intro,next:'Enter My Day',lines:[
+'<span class="epi">When did I stop living in my body and start looking at it as if it belonged to someone else?</span>',
+'My name is Katie.',
+'What do people mean when they ask what I’m thinking? Do they just want to break the awkward silence between us, or do they actually want to know what’s going on?',
+'If it’s the first reason, then hey, I’m doing fine, how about you? But if it’s for the second, excuse my excitement, I will tell you all of my thoughts. Even when it’s not that important, I’m happy that you can listen.',
+'Where should I start? Hmmm, I think in general I’m doing well. Wait, actually, these days I have this weird thought about myself. I think I have three bodies.',
+'When mom gave birth to me, did she expect that her daughter would have three bodies?',
+'Here’s how it started.']},
+{ch:1,title:'<span>Chapter One</span>The Body I Live In',stage:ch1,next:'Evening',tap:k=>say(T1[k]),
+hook(i){if(i==2){hint('touch the tray, the fork, the cup');st.classList.add('pulse')}if(i==10){$('#hand').style.opacity=.8;$('#fk').style.transform='translate(-8px,-26px) rotate(-18deg)'}},
+lines:['Lunch is not exciting as usual. I didn’t eat much yesterday, yet for some reason, I don’t feel that hungry.','I’m not sure why. I know I should eat. I mean, I understand that my body needs food. It’s not like I don’t know that.','But somehow, knowing that doesn’t make me want to eat.','“Katie, are you going to eat that?”','I look up. My friends have noticed.','“I’m just not that hungry,” I say.','They give me that look. The one that tells me they don’t really believe me.','“You should eat something.”','I know they’re right.','“Yeah, yeah. I will.”','I pick up my fork.','By the time lunch was over, I had almost forgotten about it.','Tonight, we’re going to a concert.']},
+{ch:2,title:'<span>Chapter Two</span>The Body I See',stage:ch2,next:'Head out',
+tap(k){say(T2[k]);setCool(Math.min(.95,cool+.1))},
+hook(i){const c={0:0,1:.05,2:.25,3:.4,4:.55,5:.6,6:.45,7:.35,8:.4,9:.4,10:.3,11:.2};if(i==1){hint('touch the reflection');st.classList.add('pulse')}if(i==5)$('#out').classList.add('on');if(i==6)$('#mv').classList.add('baggy');if(c[i]!==undefined)setCool(Math.max(c[i],i<6?cool:0))},
+lines:['I bought this dress last week, and I’ve been waiting for an excuse to wear it.','I think I look pretty good.','Then I look again.','I stand there for a little longer, trying different angles, pulling the fabric, adjusting the way I stand.','Somehow, I can’t get it right.','I take the dress off.','I put on my usual baggy jeans and oversized shirt instead.','<i>There. Better.</i>','I look at myself one last time before leaving.','I don’t feel particularly pretty, but at least I don’t have to think about it anymore.','I grab my bag and head out.','The concert should be fun tonight.']},
+{ch:3,title:'<span>Chapter Three</span>The Body I Create',stage:ch3,init:ch3i,gate:1,
+hook(i){if(i==5){$('#ctl').classList.remove('hide');say('Maybe if I crop it a little… adjust the lighting… add a filter…')}},
+lines:['I’m finally home.','The concert was fun. I think we took a lot of good pictures.','I start scrolling through them.','There’s one where everyone looks really good. I look at myself in it.','Hmm. I don’t really like this one.','I open the editing app.']},
+{ch:3,stage:ch3,init:ch3i,next:'Turn off my phone',
+hook(i){const ph=$('#ph');if(i==3)COM.forEach((c,j)=>tm.push(setTimeout(()=>$('#feed').insertAdjacentHTML('beforeend',`<p><b>${c[0]}</b> ${c[1]}</p>`),1500*(j+1))));if(i==10)ph.classList.add('off');if(i==12)ph.classList.remove('off')},
+lines:[()=>ed.n?'There.':'There. It’s fine as it is.','I post it.','A few minutes pass.','Then my phone lights up.','“You’re so pretty!”','“Love this picture.”','“Katie, you look amazing.”','I read the comments again.','I smile.','It’s a nice feeling, knowing that people like the way I look.','I put my phone down.','The room is quiet.','I look at the photo one more time.','I wonder if people like me, or if they like the version of me that I have learned to show them.']},
+{ch:4,title:'<span>Epilogue</span>Three Bodies,<br>One Girl',stage:ep,end:finale,
+hook(i){if(i==4)memOn('m1');if(i==5)memOn('m2');if(i==6)memOn('m3');if(i==8)$('#tri').classList.add('on');if(i==10){$('#tri').classList.add('one');['m1','m2','m3'].forEach(m=>memOn(m,0))}},
+lines:['It’s strange.','Today wasn’t particularly different from any other day. I had lunch with my friends. I got ready for a concert. I took some pictures. I posted one.','Nothing unusual happened.','And yet, I feel like I’ve been three different people.','There’s the person who was sitting at the cafeteria table, knowing she needed to eat but not wanting to.','There’s the girl standing in front of the mirror, finding things she wished she could change.','And there’s the girl in that picture on my phone. The one everyone seems to like.','I don’t know which one is really me.','<i>Maybe all of them are.</i>','I close my eyes.','I just want to rest.']}
+];
+
+/* engine */
+const NAMES=['Prologue','Chapter one','Chapter two','Chapter three','Epilogue'];
+function prog(){$('#prog').innerHTML=NAMES.map((n,i)=>`<i class="${i<chap?'d':i==chap?'on':''}" title="${n}"></i>`).join('')+'<b>'+NAMES[chap]+'</b>'}
+function step(){const l=cur.lines[li],t=typeof l=='function'?l():l,last=li==cur.lines.length-1;ln.className='';void ln.offsetWidth;ln.className=(t.length>150?'long ':'')+'in';ln.innerHTML=t;if(cur.hook)cur.hook(li);go.textContent=last&&cur.next?cur.next:'continue';go.hidden=!!(cur.gate&&last)}
+function load(i){const n=SC[i];tm.forEach(clearTimeout);tm=[];fade.innerHTML=n.title?`<p>${n.title}</p>`:'';fade.classList.add('on');
+setTimeout(()=>{si=i;cur=n;li=0;chap=n.ch;document.body.dataset.ch=n.ch;if(!(n.ch==3))setCool(0);st.className='';st.innerHTML=n.stage();if(n.init)n.init();th.innerHTML='';prog();vol();step();fade.classList.remove('on')},n.title?2800:900)}
+go.onclick=()=>{audio();if(li<cur.lines.length-1){li++;th.innerHTML='';step()}else if(cur.end)cur.end();else load(si+1)};
+st.addEventListener('click',e=>{const h=e.target.closest('[data-k]');if(h&&cur&&cur.tap)cur.tap(h.dataset.k)});
+st.addEventListener('keydown',e=>{if(e.key!='Enter'&&e.key!=' ')return;const h=e.target.closest('[data-k]');if(h&&cur&&cur.tap){e.preventDefault();cur.tap(h.dataset.k)}});
+document.addEventListener('keydown',e=>{if(e.key=='ArrowRight'&&!go.hidden)go.click()});
+
+/* ending */
+const DI=['Sometimes I miss when I didn’t care how people look at me','I maintain this body like a machine, feed it fuels so it will run smoothly. But that’s an ideal. I’m not doing well at all.','People have a lot to say. And everything you say to me about myself, I already know. I think it is my superpower that I always know how people will see me.','I think I view myself like a commodity. Taking side with all strangers in the world, I am a consumer of myself.','I mold myself to ideas and aesthetics that I found pleasing to watch and interact with. Isn’t that messed up?','I punish myself when I can’t be the way I am supposed to be. In reality I am not doing a good job on maintaining my sanity nor my health. And I keep beating myself over that.'].map(p=>`<p>${p}</p>`).join('');
+const TH=['Hey, thank you for still being here until this last minute. Thank you for caring about fragments of my thoughts.','I hope I can do better. I’m trying.','Thank you. Thank you. Thank you.','Best of luck,','Katie.'];
+async function finale(){go.hidden=true;const e=$('#end'),c=$('#endc');e.classList.add('on');await wait(3200);
+c.innerHTML=`<div class="diary">${DI}</div><button id="pg" hidden>turn the page</button>`;c.style.opacity=1;const pg=$('#pg');
+await Promise.race([wait(60000),new Promise(r=>setTimeout(()=>{pg.hidden=false;pg.onclick=r},9000))]);
+c.style.opacity=0;await wait(2800);
+c.innerHTML='<div class="thx">'+TH.map((t,i)=>`<p style="animation-delay:${i*2.8}s">${t}</p>`).join('')+'</div>';c.style.opacity=1;
+await wait(TH.length*2800+5000);c.style.opacity=0;await wait(3500);
+c.innerHTML='<button id="again">read again</button>';c.style.opacity=.55;$('#again').onclick=()=>location.reload()}
+
+load(0);
+</script>
+</body>
+</html>
